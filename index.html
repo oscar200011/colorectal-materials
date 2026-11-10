@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>愛腸篩 教材網站</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef3f8; --surface:#fff; --border:#e6e4dd; --border-soft:#ececec;
+  --ink:#2b2b28; --ink-dim:#6b6b66; --ink-faint:#9a988f;
+  --accent:#185FA5; --accent-dark:#12508c; --accent-soft:#eef3f8;
+  --accent-soft-border:#cdddec; --radius-lg:14px; --radius-md:12px; --radius-sm:9px;
+  --shadow-card:0 1px 2px rgba(30,30,25,.04); --shadow-hover:0 10px 24px -12px rgba(24,95,165,.28);
+  --ease:cubic-bezier(.22,.8,.3,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;font-family:"Noto Sans TC",-apple-system,"Segoe UI","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,a{touch-action:manipulation}
+button{font-family:inherit}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.001ms !important;transition-duration:.001ms !important}}
+
+.wrap{max-width:880px;margin:0 auto;padding:26px max(20px,env(safe-area-inset-right)) 60px max(20px,env(safe-area-inset-left));animation:fadein .35s var(--ease)}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.bar{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 14px;font-size:13px;color:var(--ink-dim);margin-bottom:22px;box-shadow:var(--shadow-card)}
+.bar span:first-child{font-weight:600;color:var(--ink)}
+
+.hero h1{font-size:25px;font-weight:700;margin:0 0 4px;letter-spacing:.2px}
+.hero .sub{margin:0;color:var(--ink-dim);font-size:15px}
+
+.quizbar{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#0F6E56,#12876a);color:#fff;border-radius:var(--radius-lg);padding:14px 18px;margin:16px 0 22px;text-decoration:none;box-shadow:0 8px 20px -8px rgba(15,110,86,.45);transition:transform .18s var(--ease),box-shadow .18s var(--ease)}
+.quizbar:hover{transform:translateY(-2px);box-shadow:0 12px 26px -8px rgba(15,110,86,.5)}
+.quizbar:active{transform:translateY(0) scale(.99)}
+.quizbar .qico{font-size:26px;line-height:1}
+.quizbar .qtxt{display:flex;flex-direction:column;line-height:1.3}.quizbar .qtxt b{font-size:16px}.quizbar .qtxt small{font-size:12px;opacity:.9}
+.quizbar .qarrow{margin-left:auto;font-size:22px;transition:transform .18s var(--ease)}
+.quizbar:hover .qarrow{transform:translateX(3px)}
+
+.secblock{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:10px;overflow:hidden;box-shadow:var(--shadow-card);transition:border-color .15s}
+.sechead{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.sechead:hover{background:#fafaf8}
+.sechead h3{margin:0;font-size:16px;font-weight:600}
+.sechead .cnt{font-size:12px;color:var(--ink-faint);background:#f4f3ee;padding:2px 8px;border-radius:999px}
+.sechead .chev{margin-left:auto;color:var(--ink-faint);transition:transform .25s var(--ease);font-size:13px}
+.secblock.open .sechead .chev{transform:rotate(90deg)}
+.chip{width:13px;height:13px;border-radius:4px;display:inline-block;flex:none}
+
+.secbody{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s var(--ease)}
+.secblock.open .secbody{grid-template-rows:1fr}
+.secbody>.secbody-inner{overflow:hidden;min-height:0}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;padding:2px 16px 16px}
+
+.gcard{display:block;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;cursor:pointer;text-decoration:none;color:inherit;transition:transform .18s var(--ease),box-shadow .18s var(--ease),border-color .18s var(--ease)}
+.gcard:hover{border-color:#c7c4b9;transform:translateY(-3px);box-shadow:var(--shadow-hover)}
+.gcard:active{transform:translateY(-1px) scale(.99)}
+.gcover{height:120px;background:#f1efe8;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.gcover img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .35s var(--ease);background:#f1efe8}
+.gcover img.loaded{opacity:1}
+.gcover.fileic{color:var(--ink-faint);font-size:14px;font-weight:600}
+.filebadge{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;letter-spacing:.2px}
+.gcap{padding:9px 11px}
+.gcap .gt{margin:0 0 2px;font-size:13px;font-weight:600;line-height:1.35}
+.gcap .gn{margin:0;font-size:12px;color:var(--ink-faint)}
+
+.sec{display:flex;align-items:center;gap:8px;margin:28px 0 10px}
+.sec h3{margin:0;font-size:17px;font-weight:600}
+
+.skelgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:6px}
+.skelcard{height:120px;border-radius:var(--radius-md);background:linear-gradient(100deg,#eceae3 30%,#f6f4ee 50%,#eceae3 70%);background-size:200% 100%;animation:shimmer 1.3s infinite}
+@keyframes shimmer{0%{background-position:160% 0}100%{background-position:-60% 0}}
+
+.loginbox{max-width:360px;margin:10vh auto 0;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:30px 26px;box-shadow:0 20px 40px -24px rgba(30,30,25,.25);animation:fadein .4s var(--ease)}
+.loginbox h1{font-size:20px;margin:0 0 4px;font-weight:700}
+.loginbox .sub{margin:0 0 18px;color:var(--ink-dim);font-size:14px}
+.loginbox input{width:100%;padding:12px 13px;margin-bottom:10px;border:1px solid #d9d6cd;border-radius:var(--radius-sm);font-size:16px;transition:border-color .15s,box-shadow .15s}
+.loginbox input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(24,95,165,.14)}
+.loginbox button{position:relative;width:100%;padding:12px;border:0;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:background .15s,transform .1s}
+.loginbox button:hover:not(:disabled){background:var(--accent-dark)}
+.loginbox button:active:not(:disabled){transform:scale(.98)}
+.loginbox button:disabled{opacity:.75;cursor:default}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:7px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.err{color:#b2402a;font-size:13px;margin:8px 0 0;min-height:16px}
+.autoload{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px 0 4px;color:var(--ink-dim);font-size:14px}
+.autoload .spin{border-color:rgba(24,95,165,.25);border-top-color:var(--accent);width:22px;height:22px;margin:0}
+
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+#reader{position:fixed;inset:0;background:#fff;z-index:900;display:flex;flex-direction:column;opacity:0;visibility:hidden;transform:translateY(14px);transition:opacity .22s var(--ease),transform .22s var(--ease),visibility 0s linear .22s;overscroll-behavior:contain}
+#reader.open{opacity:1;visibility:visible;transform:none;transition:opacity .22s var(--ease),transform .22s var(--ease)}
+#rbar{display:flex;align-items:center;gap:10px;padding:max(12px,env(safe-area-inset-top)) 14px 12px;border-bottom:1px solid #eee;background:#fff;position:sticky;top:0;z-index:2}
+#rbar button{border:0;background:var(--accent);color:#fff;border-radius:var(--radius-sm);padding:9px 16px;font-size:15px;font-weight:600;cursor:pointer;transition:background .15s,transform .1s}
+#rbar button:hover{background:var(--accent-dark)}
+#rbar button:active{transform:scale(.96)}
+#rbar .rhome{background:var(--accent-soft);color:var(--accent);margin-left:6px;padding:9px 12px}
+#rbar .rhome:hover{background:#e3ecf5}
+#rbar .rtitle{font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rnav{margin-left:auto;display:flex;gap:6px;flex:none}
+.rnav button{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-soft-border);padding:7px 11px;font-size:13px;font-weight:600;border-radius:8px}
+.rnav button:disabled{opacity:.35;cursor:default;transform:none}
+#rfoot{max-width:900px;margin:0 auto;padding:26px 16px max(60px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px;align-items:center;background:#fff;border-top:1px solid var(--border);box-shadow:0 -8px 20px -16px rgba(30,30,25,.18);position:relative;z-index:1}
+#rfoot .nextbig{width:100%;max-width:420px;background:var(--accent);color:#fff;border:0;border-radius:var(--radius-md);padding:16px;font-size:16px;font-weight:600;cursor:pointer;transition:background .15s,transform .1s;box-shadow:0 10px 22px -10px rgba(24,95,165,.5)}
+#rfoot .nextbig:hover{background:var(--accent-dark)}
+#rfoot .nextbig:active{transform:scale(.99)}
+#rfoot .prevsmall,#rfoot .tolist{background:none;border:0;color:var(--ink-dim);font-size:14px;cursor:pointer;padding:6px;transition:color .15s}
+#rfoot .prevsmall:hover,#rfoot .tolist:hover{color:var(--ink)}
+#rfoot .endnote{color:var(--ink-faint);font-size:13px}
+#rbody{overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;align-items:center;background:#faf9f6;gap:0;overscroll-behavior-y:contain}
+#rbody img{width:100%;max-width:900px;height:auto;display:block;margin:0 auto;opacity:0;transition:opacity .4s var(--ease)}
+#rbody img.loaded{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar"><span>愛腸篩 教材網站</span><span id="who"></span></div>
+
+  <div id="login">
+    <div class="loginbox">
+      <h1>愛腸篩 教材網站</h1>
+      <p class="sub" id="loginsub">請輸入貴院所的醫事機構代碼登入</p>
+      <div id="loginform">
+        <input id="code" type="text" inputmode="numeric" placeholder="醫事機構代碼" autocomplete="off">
+        <button id="btn">登入</button>
+      </div>
+      <div id="autoload" class="autoload" style="display:none"><span class="spin"></span>正在為您登入…</div>
+      <p id="err" class="err"></p>
+    </div>
+  </div>
+
+  <div id="app" style="display:none"></div>
+
+  <div id="reader">
+    <div id="rbar">
+      <button id="rback">‹ 返回</button>
+      <button class="rhome" id="rhomebtn">⌂ 首頁</button>
+      <span class="rtitle" id="rtitle"></span>
+      <span class="rnav"><button id="rprev">‹ 上一集</button><button id="rnext">下一集 ›</button></span>
+    </div>
+    <div id="rbody"></div>
+    <div id="rfoot"></div>
+  </div>
+</div>
+
+<script>
+// ===== 改成你自己的 =====
+const SUPABASE_URL = '貼你的 Supabase Project URL,例如 https://xxxxxxxx.supabase.co';
+const QUIZ_URL = 'https://oscar200011.github.io/medical-security-quiz/quiz/';
+// =========================
+
+const FN = {
+  login: SUPABASE_URL + '/functions/v1/login',
+  logEvent: SUPABASE_URL + '/functions/v1/log-event',
+};
+
+// 提早建立連線,縮短第一次打 API / 抓縮圖的時間
+try {
+  [SUPABASE_URL, 'https://img.youtube.com'].forEach(origin => {
+    if (!origin || origin.indexOf('http') !== 0) return;
+    const l = document.createElement('link'); l.rel = 'preconnect'; l.href = origin; l.crossOrigin = '';
+    document.head.appendChild(l);
+  });
+} catch (e) {}
+
+let DATA = [];
+let CODE = '';
+let CURSI = -1, CURGI = -1;
+const PALETTE = ["#185FA5","#0F6E56","#993C1D","#3C3489","#3B6D11","#854F0B"];
+
+function esc(s){ return String(s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+
+// 圖片載入完成後淡入,避免整批圖片「唰」一聲彈出來的突兀感
+function fadeInImagesWithin(container){
+  container.querySelectorAll('img').forEach(img => {
+    if (img.complete && img.naturalWidth) { img.classList.add('loaded'); return; }
+    img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+    img.addEventListener('error', () => img.classList.add('loaded'), { once: true });
+  });
+}
+
+async function doLogin(code){
+  const err = document.getElementById('err');
+  const btn = document.getElementById('btn');
+  err.textContent = '';
+  if (!code) { err.textContent = '請輸入醫事機構代碼'; return; }
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spin"></span>登入中…'; }
+  try {
+    const res = await fetch(FN.login, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ code }) });
+    const result = await res.json();
+    if (btn) { btn.disabled = false; btn.textContent = '登入'; }
+    document.getElementById('autoload').style.display = 'none';
+    document.getElementById('loginform').style.display = 'block';
+    if (!result || !result.ok) { err.textContent = (result && result.msg) || '代碼未登錄'; return; }
+    CODE = result.code; DATA = result.data || [];
+    document.getElementById('who').textContent = '登入診所:' + CODE;
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    render();
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = '登入'; }
+    document.getElementById('autoload').style.display = 'none';
+    document.getElementById('loginform').style.display = 'block';
+    err.textContent = '系統忙碌,請稍後再試';
+  }
+}
+
+function logEvent(type, sec, title){
+  try {
+    fetch(FN.logEvent, { method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ code: CODE, type, sec, title }) });
+  } catch (e) {}
+}
+
+function render(){
+  const app = document.getElementById('app');
+  let h = '<div class="hero"><h1>愛腸篩 教材網站</h1><p class="sub">教學資源總覽 · 點分類展開</p></div>';
+  if (!DATA.length) {
+    h += '<div style="text-align:center;color:var(--ink-faint);padding:48px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);margin-top:16px">'
+       + '<div style="font-size:34px;margin-bottom:8px">📭</div>目前讀不到教材。</div>';
+    app.innerHTML = h; injectQuizBar(); return;
+  }
+  DATA.forEach((sec, si) => {
+    const c = PALETTE[si % PALETTE.length];
+    h += '<div class="secblock"><div class="sechead" data-si="'+si+'"><span class="chip" style="background:'+c+'"></span>'
+       + '<h3>'+esc(sec.name)+'</h3><span class="cnt">'+sec.galleries.length+'</span><span class="chev">&#9656;</span></div>'
+       + '<div class="secbody"><div class="secbody-inner"><div class="ggrid">';
+    sec.galleries.forEach((g, gi) => {
+      if (g.cover) {
+        h += '<div class="gcard" data-si="'+si+'" data-gi="'+gi+'"><div class="gcover"><img src="'+g.cover+'" loading="lazy" decoding="async"></div>'
+           + '<div class="gcap"><p class="gt">'+esc(g.name)+'</p><p class="gn">'+g.imgs.length+' 張</p></div></div>';
+      } else {
+        g.files.forEach(f => {
+          const thumb = f.cover ? '<img src="'+f.cover+'" loading="lazy" decoding="async">' : '';
+          h += '<a class="gcard filecard" data-sec="'+esc(sec.name)+'" data-title="'+esc(f.title)+'" href="'+f.url+'" target="_blank" rel="noopener">'
+             + '<div class="gcover fileic">'+thumb+'<span class="filebadge">'+(f.meta||'檔案')+'</span></div>'
+             + '<div class="gcap"><p class="gt">'+esc(f.title)+'</p><p class="gn">'+(f.meta||'')+'</p></div></a>';
+        });
+      }
+    });
+    h += '</div></div></div></div>';
+  });
+  app.innerHTML = h;
+  injectQuizBar();
+  fadeInImagesWithin(app);
+  app.querySelectorAll('.sechead').forEach(el => el.addEventListener('click', () => el.parentElement.classList.toggle('open')));
+  app.querySelectorAll('.gcard[data-gi]').forEach(el => el.addEventListener('click', () => openGallery(+el.dataset.si, +el.dataset.gi)));
+  app.querySelectorAll('.filecard').forEach(el => el.addEventListener('click', () => logEvent('click', el.dataset.sec, el.dataset.title)));
+}
+
+function injectQuizBar(){
+  if (!QUIZ_URL) return;
+  const app = document.getElementById('app');
+  if (app.querySelector('.quizbar')) return;
+  const hero = app.querySelector('.hero');
+  const q = QUIZ_URL + (QUIZ_URL.indexOf('?') >= 0 ? '&' : '?') + 'code=' + encodeURIComponent(CODE || '');
+  const a = document.createElement('a');
+  a.className = 'quizbar'; a.href = q; a.target = '_blank'; a.rel = 'noopener';
+  a.innerHTML = '<span class="qico">📝</span><span class="qtxt"><b>前往測驗</b><small>閱讀教材後,前往題庫中心應試</small></span><span class="qarrow">›</span>';
+  if (hero && hero.nextSibling) app.insertBefore(a, hero.nextSibling); else app.appendChild(a);
+}
+
+function findAdj(si, gi, dir){
+  const gs = DATA[si].galleries;
+  for (let k = gi + dir; k >= 0 && k < gs.length; k += dir) if (gs[k].imgs && gs[k].imgs.length) return k;
+  return -1;
+}
+
+function openGallery(si, gi){
+  CURSI = si; CURGI = gi;
+  const g = DATA[si].galleries[gi], sec = DATA[si].name;
+  logEvent('open', sec + ' / ' + g.name, '');
+  document.getElementById('rtitle').textContent = sec + ' · ' + g.name;
+  const b = document.getElementById('rbody'); b.innerHTML = '';
+  g.imgs.forEach(src => { const im = document.createElement('img'); im.loading = 'lazy'; im.decoding = 'async'; im.src = src; b.appendChild(im); });
+  fadeInImagesWithin(b);
+
+  const pk = findAdj(si, gi, -1), nk = findAdj(si, gi, 1);
+  document.getElementById('rprev').disabled = pk < 0;
+  document.getElementById('rnext').disabled = nk < 0;
+
+  const gs = DATA[si].galleries;
+  const foot = document.getElementById('rfoot'); foot.innerHTML = '';
+  if (nk >= 0) {
+    const big = document.createElement('button'); big.className = 'nextbig';
+    big.textContent = '下一集:' + gs[nk].name + ' ›'; big.onclick = () => openGallery(si, nk);
+    foot.appendChild(big);
+  } else {
+    const en = document.createElement('div'); en.className = 'endnote'; en.textContent = '— 已經是最後一集 —';
+    foot.appendChild(en);
+  }
+  if (pk >= 0) {
+    const pv = document.createElement('button'); pv.className = 'prevsmall';
+    pv.textContent = '‹ 上一集:' + gs[pk].name; pv.onclick = () => openGallery(si, pk);
+    foot.appendChild(pv);
+  }
+  const tl = document.createElement('button'); tl.className = 'tolist'; tl.textContent = '回目錄'; tl.onclick = readerBack;
+  foot.appendChild(tl);
+
+  const r = document.getElementById('reader'); r.classList.add('open'); b.scrollTop = 0;
+  try { history.pushState({ v: 1 }, ''); } catch (e) {}
+}
+
+function readerBack(){ history.back(); }
+function closeReaderUI(){ document.getElementById('reader').classList.remove('open'); }
+window.addEventListener('popstate', closeReaderUI);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') readerBack(); });
+
+document.getElementById('btn').addEventListener('click', () => doLogin(document.getElementById('code').value.trim()));
+document.getElementById('code').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(e.target.value.trim()); });
+document.getElementById('rback').addEventListener('click', readerBack);
+document.getElementById('rhomebtn').addEventListener('click', () => { closeReaderUI(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+document.getElementById('rnext').addEventListener('click', () => { const k = findAdj(CURSI, CURGI, 1); if (k>=0) openGallery(CURSI,k); });
+document.getElementById('rprev').addEventListener('click', () => { const k = findAdj(CURSI, CURGI, -1); if (k>=0) openGallery(CURSI,k); });
+
+// 支援 ?code= 自動登入(給 MobiHIS 串接 / QR Code 用):
+// 先把登入表單換成載入中動畫,避免使用者看到「先閃一下登入表單、才跳進教材」的畫面
+(function init(){
+  const p = new URLSearchParams(location.search);
+  const c = p.get('code');
+  if (c) {
+    document.getElementById('loginform').style.display = 'none';
+    document.getElementById('loginsub').style.display = 'none';
+    document.getElementById('autoload').style.display = 'flex';
+    doLogin(c.trim());
+  }
+})();
+</script>
+</body>
+</html>
