@@ -102,12 +102,14 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(-
 .rnav{margin-left:auto;display:flex;gap:6px;flex:none}
 .rnav button{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-soft-border);padding:7px 11px;font-size:13px;font-weight:600;border-radius:8px}
 .rnav button:disabled{opacity:.35;cursor:default;transform:none}
-#rfoot{max-width:900px;margin:0 auto;padding:26px 16px max(60px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px;align-items:center;background:#fff;border-top:1px solid var(--border);box-shadow:0 -8px 20px -16px rgba(30,30,25,.18);position:relative;z-index:1}
-#rfoot .nextbig{width:100%;max-width:420px;background:var(--accent);color:#fff;border:0;border-radius:var(--radius-md);padding:16px;font-size:16px;font-weight:600;cursor:pointer;transition:background .15s,transform .1s;box-shadow:0 10px 22px -10px rgba(24,95,165,.5)}
+#rfoot{max-width:900px;margin:0 auto;padding:14px 16px calc(12px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px;align-items:center;background:#fff;border-top:1px solid var(--border);box-shadow:0 -8px 20px -16px rgba(30,30,25,.18);position:relative;z-index:1}
+#rfoot .nextbig{width:100%;max-width:420px;background:var(--accent);color:#fff;border:0;border-radius:var(--radius-md);padding:13px;font-size:15px;font-weight:600;cursor:pointer;transition:background .15s,transform .1s;box-shadow:0 10px 22px -10px rgba(24,95,165,.5)}
 #rfoot .nextbig:hover{background:var(--accent-dark)}
 #rfoot .nextbig:active{transform:scale(.99)}
-#rfoot .prevsmall,#rfoot .tolist{background:none;border:0;color:var(--ink-dim);font-size:14px;cursor:pointer;padding:6px;transition:color .15s}
+#rfoot .rfootsub{display:flex;align-items:center;gap:4px}
+#rfoot .prevsmall,#rfoot .tolist{background:none;border:0;color:var(--ink-dim);font-size:13px;cursor:pointer;padding:4px 8px;transition:color .15s}
 #rfoot .prevsmall:hover,#rfoot .tolist:hover{color:var(--ink)}
+#rfoot .rfootsub .sep{color:var(--border);font-size:12px}
 #rfoot .endnote{color:var(--ink-faint);font-size:13px}
 #rbody{overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;display:flex;flex-direction:column;align-items:center;background:#faf9f6;gap:0;overscroll-behavior-y:contain}
 #rbody img{width:100%;max-width:900px;height:auto;display:block;margin:0 auto;opacity:0;transition:opacity .4s var(--ease)}
@@ -291,13 +293,17 @@ function openGallery(si, gi){
     const en = document.createElement('div'); en.className = 'endnote'; en.textContent = '— 已經是最後一集 —';
     foot.appendChild(en);
   }
+  const subrow = document.createElement('div'); subrow.className = 'rfootsub';
   if (pk >= 0) {
     const pv = document.createElement('button'); pv.className = 'prevsmall';
     pv.textContent = '‹ 上一集:' + gs[pk].name; pv.onclick = () => openGallery(si, pk);
-    foot.appendChild(pv);
+    subrow.appendChild(pv);
+    const sep = document.createElement('span'); sep.className = 'sep'; sep.textContent = '|';
+    subrow.appendChild(sep);
   }
   const tl = document.createElement('button'); tl.className = 'tolist'; tl.textContent = '回目錄'; tl.onclick = readerBack;
-  foot.appendChild(tl);
+  subrow.appendChild(tl);
+  foot.appendChild(subrow);
 
   const r = document.getElementById('reader'); r.classList.add('open'); b.scrollTop = 0;
   try { history.pushState({ v: 1 }, ''); } catch (e) {}
@@ -317,16 +323,4 @@ document.getElementById('rprev').addEventListener('click', () => { const k = fin
 
 // 支援 ?code= 自動登入(給 MobiHIS 串接 / QR Code 用):
 // 先把登入表單換成載入中動畫,避免使用者看到「先閃一下登入表單、才跳進教材」的畫面
-(function init(){
-  const p = new URLSearchParams(location.search);
-  const c = p.get('code');
-  if (c) {
-    document.getElementById('loginform').style.display = 'none';
-    document.getElementById('loginsub').style.display = 'none';
-    document.getElementById('autoload').style.display = 'flex';
-    doLogin(c.trim());
-  }
-})();
-</script>
-</body>
-</html>
+(f
