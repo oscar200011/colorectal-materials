@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>愛腸篩 教材網站 · 統計</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:#eef3f8;color:#2b2b28;line-height:1.6}
+.wrap{max-width:880px;margin:0 auto;padding:26px 20px 60px}
+.bar{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #e6e4dd;border-radius:12px;padding:10px 14px;font-size:13px;color:#6b6b66;margin-bottom:22px}
+.metric{background:#fff;border:1px solid #e6e4dd;border-radius:12px;padding:14px 16px;margin:0 10px 20px 0;display:inline-block}
+.metric .n{font-size:24px;font-weight:600}.metric .l{font-size:13px;color:#6b6b66}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:8px 6px;border-bottom:1px solid #eee;text-align:left}
+.chartbox{background:#fff;border:1px solid #e6e4dd;border-radius:12px;padding:16px;margin-bottom:20px}
+.sec{display:flex;align-items:center;gap:8px;margin:28px 0 10px}.chip{width:14px;height:14px;border-radius:4px;display:inline-block}.sec h3{margin:0;font-size:17px;font-weight:600}
+.notice{background:#fff;border:1px solid #e6e4dd;border-radius:12px;padding:30px 24px;text-align:center;margin-top:16px}
+.keybox{max-width:360px;margin:8vh auto 0;background:#fff;border:1px solid #e6e4dd;border-radius:14px;padding:28px 26px}
+.keybox input{width:100%;padding:11px 12px;margin-bottom:10px;border:1px solid #d9d6cd;border-radius:9px;font-size:15px}
+.keybox button{width:100%;padding:11px;border:0;border-radius:9px;background:#185FA5;color:#fff;font-size:15px;cursor:pointer}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar"><span>愛腸篩 教材網站 · 統計</span><span></span></div>
+  <div id="gate">
+    <div class="keybox">
+      <input id="key" type="password" placeholder="管理金鑰" autocomplete="off">
+      <button id="go">查看統計</button>
+      <p id="err" style="color:#b2402a;font-size:13px;margin-top:8px"></p>
+    </div>
+  </div>
+  <div id="dash" style="display:none"></div>
+</div>
+<script>
+const SUPABASE_URL = '貼你的 Supabase Project URL,例如 https://xxxxxxxx.supabase.co';
+const FN_STATS = SUPABASE_URL + '/functions/v1/admin-stats';
+
+async function loadStats(key){
+  const err = document.getElementById('err');
+  err.textContent = '';
+  try {
+    const res = await fetch(FN_STATS, { headers: { 'x-admin-key': key } });
+    const d = await res.json();
+    if (!d.ok) { err.textContent = d.msg || '無權檢視'; return; }
+    document.getElementById('gate').style.display = 'none';
+    const dash = document.getElementById('dash'); dash.style.display = 'block';
+    let tbl = '';
+    d.openLabels.forEach((k,i) => { tbl += '<tr><td style="color:#9a988f">'+(i+1)+'</td><td>'+k+'</td><td style="text-align:right;font-weight:600">'+d.openCounts[i]+'</td></tr>'; });
+    if (!tbl) tbl = '<tr><td colspan="3" style="color:#9a988f;text-align:center;padding:16px">尚無資料</td></tr>';
+    dash.innerHTML =
+      '<div><div class="metric"><div class="n">'+d.openTotal+'</div><div class="l">圖庫觀看次數(點進條漫)</div></div>'+
+      '<div class="metric"><div class="n">'+d.clickTotal+'</div><div class="l">檔案點擊次數(PDF/影片等)</div></div></div>'+
+      '<div class="sec"><span class="chip" style="background:#3C3489"></span><h3>各圖庫觀看排行</h3></div><div class="chartbox"><canvas id="openChart" height="220"></canvas></div>'+
+      '<div class="sec"><span class="chip" style="background:#0F6E56"></span><h3>每日趨勢(檔案點擊)</h3></div><div class="chartbox"><canvas id="trendChart" height="200"></canvas></div>'+
+      '<div class="sec"><span class="chip" style="background:#993C1D"></span><h3>各診所使用量(點擊)</h3></div><div class="chartbox"><canvas id="clinicChart" height="200"></canvas></div>'+
+      '<div class="sec"><span class="chip" style="background:#854F0B"></span><h3>圖庫觀看明細</h3></div><div class="chartbox"><table><thead><tr><th style="width:40px">#</th><th>圖庫</th><th style="text-align:right">觀看</th></tr></thead><tbody>'+tbl+'</tbody></table></div>';
+
+    function bar(id,l,dd,c){ if(!l.length) return; new Chart(document.getElementById(id), { type:'bar', data:{labels:l,datasets:[{data:dd,backgroundColor:c}]}, options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{precision:0}}}} }); }
+    bar('openChart', d.openLabels, d.openCounts, '#6A62B8');
+    bar('clinicChart', d.clinicLabels, d.clinicCounts, '#C2673F');
+    if (d.days.length) new Chart(document.getElementById('trendChart'), { type:'line', data:{labels:d.days,datasets:[{data:d.dayCounts,borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,.12)',fill:true,tension:.25}]}, options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}} });
+  } catch (e) {
+    err.textContent = '系統忙碌,請稍後再試';
+  }
+}
+
+document.getElementById('go').addEventListener('click', () => loadStats(document.getElementById('key').value));
+document.getElementById('key').addEventListener('keydown', e => { if (e.key === 'Enter') loadStats(e.target.value); });
+
+// 支援 ?key= 直接帶金鑰開啟
+(function init(){
+  const p = new URLSearchParams(location.search);
+  const k = p.get('key');
+  if (k) loadStats(k);
+})();
+</script>
+</body>
+</html>
