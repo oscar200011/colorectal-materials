@@ -323,4 +323,16 @@ document.getElementById('rprev').addEventListener('click', () => { const k = fin
 
 // 支援 ?code= 自動登入(給 MobiHIS 串接 / QR Code 用):
 // 先把登入表單換成載入中動畫,避免使用者看到「先閃一下登入表單、才跳進教材」的畫面
-(f
+(function init(){
+  const p = new URLSearchParams(location.search);
+  const c = p.get('code');
+  if (c) {
+    document.getElementById('loginform').style.display = 'none';
+    document.getElementById('loginsub').style.display = 'none';
+    document.getElementById('autoload').style.display = 'flex';
+    doLogin(c.trim());
+  }
+})();
+</script>
+</body>
+</html>
